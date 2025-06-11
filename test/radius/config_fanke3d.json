@@ -1,0 +1,48 @@
+{
+  "general": {
+    "function": "franke3d",
+    "ranks": { "A": [ 1 ], "B": [ 1 ] },
+    "synchronize": false,
+    "meshes": {
+      "A": { "coarse": "${ROOT_LOCATION}/meshes/t_0.02.vtk", "fine": "${ROOT_LOCATION}/meshes/t_0.008.vtk" },
+      "B": { "eval": "${ROOT_LOCATION}/meshes/t_0.006.vtk" }
+    }
+  },
+  "groups": [
+    {
+      "mapping": {
+        "constraints": ["consistent"],
+        "cases": {
+          "gaussian_0.01":     { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"0.01\"",     "options": "polynomial=\"off\"" },
+          "gaussian_0.017783": { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"0.017783\"", "options": "polynomial=\"off\"" },
+          "gaussian_0.031623": { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"0.031623\"", "options": "polynomial=\"off\"" },
+          "gaussian_0.056234": { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"0.056234\"", "options": "polynomial=\"off\"" },
+          "gaussian_0.1":      { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"0.1\"",      "options": "polynomial=\"off\"" },
+          "gaussian_0.17783":  { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"0.17783\"",  "options": "polynomial=\"off\"" },
+          "gaussian_0.31623":  { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"0.31623\"",  "options": "polynomial=\"off\"" },
+          "gaussian_0.56234":  { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"0.56234\"",  "options": "polynomial=\"off\"" },
+          "gaussian_1":        { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"1\"",        "options": "polynomial=\"off\"" },
+          "gaussian_1.7783":   { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"1.7783\"",   "options": "polynomial=\"off\"" },
+          "gaussian_3.1623":   { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"3.1623\"",   "options": "polynomial=\"off\"" },
+          "gaussian_5.6234":   { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"5.6234\"",   "options": "polynomial=\"off\"" },
+          "gaussian_10":       { "kind": "rbf-global-direct", "basis-function": "gaussian support-radius=\"10\"",       "options": "polynomial=\"off\"" },
+
+          "wendlandC4_0.01":     { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"0.01\"",     "options": "polynomial=\"off\"" },
+          "wendlandC4_0.017783": { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"0.017783\"", "options": "polynomial=\"off\"" },
+          "wendlandC4_0.031623": { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"0.031623\"", "options": "polynomial=\"off\"" },
+          "wendlandC4_0.056234": { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"0.056234\"", "options": "polynomial=\"off\"" },
+          "wendlandC4_0.1":      { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"0.1\"",      "options": "polynomial=\"off\"" },
+          "wendlandC4_0.17783":  { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"0.17783\"",  "options": "polynomial=\"off\"" },
+          "wendlandC4_0.31623":  { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"0.31623\"",  "options": "polynomial=\"off\"" },
+          "wendlandC4_0.56234":  { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"0.56234\"",  "options": "polynomial=\"off\"" },
+          "wendlandC4_1":        { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"1\"",        "options": "polynomial=\"off\"" },
+          "wendlandC4_1.7783":   { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"1.7783\"",   "options": "polynomial=\"off\"" },
+          "wendlandC4_3.1623":   { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"3.1623\"",   "options": "polynomial=\"off\"" },
+          "wendlandC4_5.6234":   { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"5.6234\"",   "options": "polynomial=\"off\"" },
+          "wendlandC4_10":       { "kind": "rbf-global-direct", "basis-function": "compact-polynomial-c4 support-radius=\"10\"",       "options": "polynomial=\"off\"" }
+        }
+      },
+      "meshes": { "A": ["coarse", "fine"], "B": ["eval"] }
+    }
+  ]
+}
