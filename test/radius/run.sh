@@ -1,6 +1,6 @@
-set -e 
+# set -e 
 
-TEST_NAME="performance"
+TEST_NAME="radius"
 
 export ROOT_LOCATION="$(pwd)"
 
@@ -15,8 +15,8 @@ export PATH=$ASTE_BUILD:$PATH
 rm -rf "${TEST_LOCATION}"
 mkdir -p "${TEST_LOCATION}"
 
-python3 "${MAPPING_TESTER}"/generate.py --setup "${RUN_LOCATION}"/config.json --outdir "${TEST_LOCATION}" --template "${MAPPING_TESTER}"/config-template.xml --exit
-python3 "${MAPPING_TESTER}"/preparemeshes.py --setup "${RUN_LOCATION}"/config.json --outdir "${TEST_LOCATION}"
+python3 "${MAPPING_TESTER}"/generate.py --setup "${RUN_LOCATION}"/config-fanke3d.json --outdir "${TEST_LOCATION}" --template "${MAPPING_TESTER}"/config-template.xml --exit
+python3 "${MAPPING_TESTER}"/preparemeshes.py --setup "${RUN_LOCATION}"/config-fanke3d.json --outdir "${TEST_LOCATION}"
 
 cd "${TEST_LOCATION}"
 

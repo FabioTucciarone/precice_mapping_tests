@@ -25,4 +25,7 @@ old_tests
 !**/overview/data/thesis
 **/overview/testcase
 
+**/**/data/*
+**/**/testcase
+
 *.pdf
