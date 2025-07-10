@@ -26,6 +26,9 @@ old_tests
 **/overview/testcase
 
 **/**/data/*
+!**/**/data/thesis
 **/**/testcase
+**/**/testcase_1
+**/**/testcase_2
 
 *.pdf

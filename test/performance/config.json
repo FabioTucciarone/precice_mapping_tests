@@ -1,0 +1,29 @@
+{
+  "general": {
+    "function": "0.8 + cos(15*(x+y+z))",
+    "ranks": {
+      "A": [ 1 ],
+      "B": [ 1 ]
+    },
+    "synchronize": false,
+    "meshes": {
+      "A": { "coarse": "${ROOT_LOCATION}/meshes/t_0.02.vtk" },
+      "B": { "fine": "${ROOT_LOCATION}/meshes/t_0.003.vtk" }
+    }
+  },
+  "groups": [
+    {
+      "mapping": {
+        "constraints": ["consistent"],
+        "cases": {
+          "performance": {
+            "kind": "rbf-pum-direct", "options": "polynomial=\"off\"",
+            "basis-function": "gaussian autotune-shape=\"on\" support-radius=\"0.07\"",
+            "executor": "cpu", "executor-options": ""
+          }
+        }
+      },
+      "meshes": { "A": ["coarse"], "B": ["fine"] }
+    }
+  ]
+}
