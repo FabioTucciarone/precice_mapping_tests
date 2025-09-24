@@ -8,6 +8,25 @@ import sys
 import os
 import numpy as np
 
+
+def get_mesh_res(description: str):
+    if "coarse" in description:
+        return "0.02"
+    elif "fine" in description:
+        return "0.008"
+    else:
+        return "?"
+
+
+def get_test_function(description: str):
+    if "cos" in description:
+        return "$0.8 + \cos(15(x+y+z))$"
+    elif "franke" in description:
+        return "franke3d"
+    else:
+        return "?"
+    
+
 def main(argv):
     
     paths = []
@@ -40,7 +59,7 @@ def main(argv):
         
         fig: Figure = plt.figure()
         
-        fig.suptitle(case_path)
+        fig.suptitle(get_test_function(case_path))
         
         for i, mesh_resolution in enumerate(["coarse", "fine"]):
             for j, rbf in enumerate(["gaussian", "wendlandC4"]):
@@ -54,8 +73,8 @@ def main(argv):
                 rcond = np.pow(10.0, filtered_add['100-log-rcond'] / 100.0) # filtered_add['condition-factor'] / 10 * np.pow(2.0, filtered_add['condition-exp'])
 
                 err_axs.plot(filtered_stats['radius'], filtered_stats['relative-l2'], marker="o", color="blue", label="error")
-                cond_axs.plot(filtered_add['radius'], 1 / rcond, marker="x", linestyle="dotted", color="red", label="reciprocal condition")
-                err_axs.plot(filtered_add['radius'], filtered_add['llt-success'] + 1e-3, marker=".", linestyle="none", color="grey", label="llt success")
+                cond_axs.plot(filtered_add['radius'], 1 / rcond, marker="x", linestyle="dotted", color="red", label="condition number")
+                err_axs.plot(filtered_add['radius'], filtered_add['llt-success'] + 1e-3, marker=".", linestyle="none", color="grey", label="LLT success")
                 
                 cond_axs.set_xscale("log")
                 cond_axs.set_yscale("log")
@@ -63,7 +82,7 @@ def main(argv):
                 cond_axs.yaxis.tick_right()
                 cond_axs.yaxis.set_label_position('right') 
                 
-                err_axs.set_title(f"{mesh_resolution}, {rbf}")
+                err_axs.set_title(f"{mesh_resolution} ($h={get_mesh_res(mesh_resolution)}$), rbf={rbf}")
                 err_axs.set_xscale("log")
                 err_axs.set_yscale("log")
                 err_axs.grid(which="major", color="lightgrey", linestyle="dotted")
@@ -72,7 +91,7 @@ def main(argv):
                 if j == 0:
                     err_axs.set_ylabel("relative $l_2$")
                 else:
-                    cond_axs.set_ylabel("reciprocal condition")
+                    cond_axs.set_ylabel("condition number")
                 
                 time_handles,   labels = err_axs.get_legend_handles_labels()
                 memory_handles, labels = cond_axs.get_legend_handles_labels()
@@ -80,7 +99,7 @@ def main(argv):
                 fig.legend(handles=time_handles+memory_handles, ncol=4, loc='outside lower center')
                 
                 # Manuelle Punkte
-                if mesh_resolution == "fine" and rbf == "wendlandC4":
+                if mesh_resolution == "fine" and rbf == "wendlandC4" and "cos" in case_path:
                     # Bayes Opt:
                     err_axs.plot(9.2714e-01, 0.000005, marker="D", color="green")
                     err_axs.annotate("BO", (9.2714e-01, 0.000005))
@@ -91,7 +110,7 @@ def main(argv):
                     err_axs.plot(1.0020e+00, 0.000005, marker="D", color="green")
                     err_axs.annotate("It", (1.0020e+00, 0.000005))
                     
-                if mesh_resolution == "fine" and rbf == "gaussian":
+                if mesh_resolution == "fine" and rbf == "gaussian" and "cos" in case_path:
                     # Bayes Opt:
                     err_axs.plot(5.6346e-02, 0.00215189, marker="D", color="green")
                     err_axs.annotate("BO", (5.6346e-02, 0.00215189))
