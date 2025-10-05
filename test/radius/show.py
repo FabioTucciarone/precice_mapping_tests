@@ -41,7 +41,7 @@ def main(argv):
     #             paths.append( (file_name, f"test/radius/data/{file_name}") )
                 
     paths = [(f"test/radius/data/franke3d", "statistics.csv", "additional.csv"),
-             (f"test/radius/data/cos", "statistics.csv", "additional.csv")]
+             (f"test/radius/data/cos", "statistics.csv", "additional.csv")] # (f"test/radius/data/franke3d", "statistics.csv", "additional.csv")
 
     for case in paths:
         
@@ -61,30 +61,39 @@ def main(argv):
         
         fig.suptitle(get_test_function(case_path))
         
-        for i, mesh_resolution in enumerate(["coarse", "fine"]):
+        for i, mesh_resolution in enumerate(["coarse"]): # coarse und ggf andere stehen in statistics.csv
             for j, rbf in enumerate(["gaussian", "wendlandC4"]):
                 
                 err_axs: Axes  = fig.add_subplot(221 + 2*i + j)
                 cond_axs: Axes = fig.add_subplot(221 + 2*i + j, sharex=err_axs, frame_on=False)
                 
-                filtered_stats = statistics.loc[(statistics["rbf"] == rbf) & (statistics["mesh A"] == mesh_resolution)].sort_values(by="radius", ascending=False)
-                filtered_add   = additional.loc[(additional["rbf"] == rbf) & (additional["mesh A"] == mesh_resolution)].sort_values(by="radius", ascending=False)
+                filtered_stats = statistics.loc[(statistics["rbf"] == rbf) & (statistics["mesh A"] == mesh_resolution)].sort_values(by="radius", ascending=False).reindex()
+                filtered_add   = additional.loc[(additional["rbf"] == rbf) & (additional["mesh A"] == mesh_resolution)].sort_values(by="radius", ascending=False).reindex()
+                
+                filtered_stats = filtered_stats.loc[filtered_add["llt-success"] == 1]
+                filtered_add   = filtered_add.loc[filtered_add["llt-success"] == 1]
 
-                rcond = np.pow(10.0, filtered_add['100-log-rcond'] / 100.0) # filtered_add['condition-factor'] / 10 * np.pow(2.0, filtered_add['condition-exp'])
+                rcond       = np.pow(10.0, filtered_add['100-log-rcond'] / 100.0)
+                loocv_error = np.pow(10.0, filtered_add['1000-log-loocv_error'] / 1000.0)
+                sum_error   = np.pow(10.0, filtered_add['1000-log-sum_error'] / 1000.0) / 1e3
 
-                err_axs.plot(filtered_stats['radius'], filtered_stats['relative-l2'], marker="o", color="blue", label="error")
+                err_axs.plot(filtered_stats['radius'], filtered_stats['relative-l2'], marker="o", label="relative-l2")
+                err_axs.plot(filtered_stats['radius'], filtered_stats['weighted-relative-l2'], marker="o", label="weighted-relative-l2")
+                err_axs.plot(filtered_stats['radius'], loocv_error, marker="o", label="loocv_error")
+                err_axs.plot(filtered_stats['radius'], sum_error, marker="o", label="sum_error")
+                
                 cond_axs.plot(filtered_add['radius'], 1 / rcond, marker="x", linestyle="dotted", color="red", label="condition number")
-                err_axs.plot(filtered_add['radius'], filtered_add['llt-success'] + 1e-3, marker=".", linestyle="none", color="grey", label="LLT success")
+                #err_axs.plot(filtered_add['radius'], filtered_add['llt-success'] + 1e-3, marker=".", linestyle="none", color="grey", label="LLT success")
                 
                 cond_axs.set_xscale("log")
-                cond_axs.set_yscale("log")
-                cond_axs.grid(which="major", color="lightgrey", linestyle="dotted")
+                cond_axs.set_yscale("symlog")
+                #cond_axs.grid(which="major", color="lightgrey", linestyle="dotted")
                 cond_axs.yaxis.tick_right()
                 cond_axs.yaxis.set_label_position('right') 
                 
                 err_axs.set_title(f"{mesh_resolution} ($h={get_mesh_res(mesh_resolution)}$), rbf={rbf}")
                 err_axs.set_xscale("log")
-                err_axs.set_yscale("log")
+                err_axs.set_yscale("symlog")
                 err_axs.grid(which="major", color="lightgrey", linestyle="dotted")
                 err_axs.set_xlabel("radius")
                 
@@ -96,31 +105,8 @@ def main(argv):
                 time_handles,   labels = err_axs.get_legend_handles_labels()
                 memory_handles, labels = cond_axs.get_legend_handles_labels()
     
-                fig.legend(handles=time_handles+memory_handles, ncol=4, loc='outside lower center')
+                fig.legend(handles=time_handles + memory_handles, ncol=4, loc='outside lower center')
                 
-                # Manuelle Punkte
-                if mesh_resolution == "fine" and rbf == "wendlandC4" and "cos" in case_path:
-                    # Bayes Opt:
-                    err_axs.plot(9.2714e-01, 0.000005, marker="D", color="green")
-                    err_axs.annotate("BO", (9.2714e-01, 0.000005))
-                    # Bisection:
-                    err_axs.plot(8.8041e-01, 0.000005, marker="D", color="green")
-                    err_axs.annotate("Bi", (8.8041e-01, 0.000005))
-                    # Iterative:
-                    err_axs.plot(1.0020e+00, 0.000005, marker="D", color="green")
-                    err_axs.annotate("It", (1.0020e+00, 0.000005))
-                    
-                if mesh_resolution == "fine" and rbf == "gaussian" and "cos" in case_path:
-                    # Bayes Opt:
-                    err_axs.plot(5.6346e-02, 0.00215189, marker="D", color="green")
-                    err_axs.annotate("BO", (5.6346e-02, 0.00215189))
-                    # Bisection:
-                    err_axs.plot(7.2194e-02, 0.0005269536, marker="D", color="green")
-                    err_axs.annotate("Bi", (7.2194e-02, 0.0005269536))
-                    # Iterative:
-                    err_axs.plot(5.6346e-02, 0.00215189, marker="D", color="green")
-                    err_axs.annotate("It", (5.6346e-02, 0.00215189))
-                    
                 
         fig.show()
         fig.savefig(f"{stats_file_name}.pdf")

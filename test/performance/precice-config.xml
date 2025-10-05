@@ -25,9 +25,9 @@
     <receive-mesh name="A-Mesh" from="A" />
     <provide-mesh name="B-Mesh" />
     <read-data name="Data" mesh="B-Mesh" />
-    <mapping:rbf-greedy greedy-type="P-cut" solver-rtol="0" max-iterations="100" constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" polynomial="off">
+    <mapping:rbf constraint="consistent" direction="read" from="A-Mesh" to="B-Mesh" polynomial="off">
       <basis-function:gaussian support-radius="0.2" />
-    </mapping:rbf-greedy>
+    </mapping:rbf>
   </participant>
 
   <coupling-scheme:parallel-explicit>

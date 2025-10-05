@@ -27,22 +27,22 @@ bash ./runall.sh
 bash ./postprocessall.sh
 
 python3 "${MAPPING_TESTER}"/gatherstats.py              --outdir "${TEST_LOCATION}_1" --file "${RUN_LOCATION}/data/cos/statistics.csv"
-python3 "${RUN_LOCATION}/../gather_additional_stats.py" --outdir "${TEST_LOCATION}_1" --file "${RUN_LOCATION}/data/cos/additional.csv" --event_regex "map.rbf.condition"
+python3 "${RUN_LOCATION}/../gather_additional_stats.py" --outdir "${TEST_LOCATION}_1" --file "${RUN_LOCATION}/data/cos/additional.csv" --event_regex "map.rbf.(solveConservativeTest|condition)"
 
 
-rm    -rf "${TEST_LOCATION}_2" 
-mkdir -p  "${TEST_LOCATION}_2"
+# rm    -rf "${TEST_LOCATION}_2" 
+# mkdir -p  "${TEST_LOCATION}_2"
 
-cd "${RUN_LOCATION}"
-python3 "${MAPPING_TESTER}"/generate.py      --setup "${RUN_LOCATION}"/config-fanke3d.json --outdir "${TEST_LOCATION}_2" --template "${MAPPING_TESTER}"/config-template.xml --exit
-python3 "${MAPPING_TESTER}"/preparemeshes.py --setup "${RUN_LOCATION}"/config-fanke3d.json --outdir "${TEST_LOCATION}_2"
+# cd "${RUN_LOCATION}"
+# python3 "${MAPPING_TESTER}"/generate.py      --setup "${RUN_LOCATION}"/config-fanke3d.json --outdir "${TEST_LOCATION}_2" --template "${MAPPING_TESTER}"/config-template.xml --exit
+# python3 "${MAPPING_TESTER}"/preparemeshes.py --setup "${RUN_LOCATION}"/config-fanke3d.json --outdir "${TEST_LOCATION}_2"
 
-cd "${TEST_LOCATION}_2"
-bash ./runall.sh
-bash ./postprocessall.sh
+# cd "${TEST_LOCATION}_2"
+# bash ./runall.sh
+# bash ./postprocessall.sh
 
-python3 "${MAPPING_TESTER}"/gatherstats.py              --outdir "${TEST_LOCATION}_2" --file "${RUN_LOCATION}/data/franke3d/statistics.csv"
-python3 "${RUN_LOCATION}/../gather_additional_stats.py" --outdir "${TEST_LOCATION}_2" --file "${RUN_LOCATION}/data/franke3d/additional.csv" --event_regex "map.rbf.condition"
+# python3 "${MAPPING_TESTER}"/gatherstats.py              --outdir "${TEST_LOCATION}_2" --file "${RUN_LOCATION}/data/franke3d/statistics.csv"
+# python3 "${RUN_LOCATION}/../gather_additional_stats.py" --outdir "${TEST_LOCATION}_2" --file "${RUN_LOCATION}/data/franke3d/additional.csv" --event_regex "map.rbf.(solveConservativeTest|condition)"
 
 
 cd "${RUN_LOCATION}"

@@ -5,17 +5,17 @@
     "synchronize": false,
     "meshes": {
       "A": { "coarse": "${ROOT_LOCATION}/meshes/t_0.02.vtk" },
-      "B": { "fine": "${ROOT_LOCATION}/meshes/t_0.003.vtk" }
+      "B": { "fine": "${ROOT_LOCATION}/meshes/t_0.01.vtk" }
     }
   },
   "groups": [
     {
       "mapping": {
-        "constraints": ["consistent"],
+        "constraints": ["conservative"],
         "cases": {
           "performance": {
-            "kind": "rbf-global-direct", "options": "polynomial=\"separate\"",
-            "basis-function": "gaussian support-radius=\"auto\"",
+            "kind": "rbf-global-direct", "options": "polynomial=\"off\"",
+            "basis-function": "gaussian support-radius=\"0.215443\"",
             "executor": "cpu", "executor-options": ""
           }
         }
