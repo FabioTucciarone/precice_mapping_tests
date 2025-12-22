@@ -5,8 +5,8 @@ import sys
 
 def main(argv):
 
-    statistics = pl.read_csv(argv[1])
-    print(statistics.select("relative-l2", "median(abs)","mapDataTime", "computeMappingTime"))
+    statistics: pl.DataFrame = pl.read_csv(argv[1])
+    print(statistics.select("globalTime", "initializeTime", "mapDataTime", "computeMappingTime"))
 
 if __name__ == "__main__":
    main(sys.argv)

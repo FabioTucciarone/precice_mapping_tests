@@ -12,6 +12,8 @@ MAPPING_TESTER="${ASTE_LOCATION}/tools/mapping-tester"
 ASTE_BUILD="${ASTE_LOCATION}/build"
 export PATH=$ASTE_BUILD:$PATH
 
+export ASTE_A_MPIARGS="-n 2"
+export ASTE_B_MPIARGS="-n 2"
 
 rm -rf "${TEST_LOCATION}"
 mkdir -p "${TEST_LOCATION}"

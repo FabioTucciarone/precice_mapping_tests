@@ -41,7 +41,7 @@ def parse_args(argv):
 def main(argv):
     args = parse_args(argv[1:])
     
-    is_conservative = True # TODO: auslesen
+    is_conservative = False # TODO: auslesen
     
     all_keys: set = set()
     data_list: list[dict] = []

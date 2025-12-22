@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-import polars as pl
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 import sys
-import os
 import numpy as np
 
 
@@ -41,7 +39,7 @@ def main(argv):
     #             paths.append( (file_name, f"test/radius/data/{file_name}") )
                 
     paths = [(f"test/radius/data/franke3d", "statistics.csv", "additional.csv"),
-             (f"test/radius/data/cos", "statistics.csv", "additional.csv")] # (f"test/radius/data/franke3d", "statistics.csv", "additional.csv")
+             (f"test/radius/data/cos", "statistics.csv", "additional.csv")]
 
     for case in paths:
         
@@ -61,7 +59,7 @@ def main(argv):
         
         fig.suptitle(get_test_function(case_path))
         
-        for i, mesh_resolution in enumerate(["coarse"]): # coarse und ggf andere stehen in statistics.csv
+        for i, mesh_resolution in enumerate(["coarse", "fine"]): # coarse und ggf andere stehen in statistics.csv
             for j, rbf in enumerate(["gaussian", "wendlandC4"]):
                 
                 err_axs: Axes  = fig.add_subplot(221 + 2*i + j)
@@ -73,21 +71,24 @@ def main(argv):
                 filtered_stats = filtered_stats.loc[filtered_add["llt-success"] == 1]
                 filtered_add   = filtered_add.loc[filtered_add["llt-success"] == 1]
 
+                # Additional error metrics for conservative and consistent mappings. 
+            
+                # Need to be implemented and stored by preCICE in an Event:
                 rcond       = np.pow(10.0, filtered_add['100-log-rcond'] / 100.0)
                 loocv_error = np.pow(10.0, filtered_add['1000-log-loocv_error'] / 1000.0)
                 sum_error   = np.pow(10.0, filtered_add['1000-log-sum_error'] / 1000.0) / 1e3
+                
+                # Needs to be implemented and exported by aste:
+                err_axs.plot(filtered_stats['radius'], filtered_stats['weighted-relative-l2'], marker="o", label="weighted-relative-l2")
 
                 err_axs.plot(filtered_stats['radius'], filtered_stats['relative-l2'], marker="o", label="relative-l2")
-                err_axs.plot(filtered_stats['radius'], filtered_stats['weighted-relative-l2'], marker="o", label="weighted-relative-l2")
                 err_axs.plot(filtered_stats['radius'], loocv_error, marker="o", label="loocv_error")
                 err_axs.plot(filtered_stats['radius'], sum_error, marker="o", label="sum_error")
                 
                 cond_axs.plot(filtered_add['radius'], 1 / rcond, marker="x", linestyle="dotted", color="red", label="condition number")
-                #err_axs.plot(filtered_add['radius'], filtered_add['llt-success'] + 1e-3, marker=".", linestyle="none", color="grey", label="LLT success")
                 
                 cond_axs.set_xscale("log")
                 cond_axs.set_yscale("symlog")
-                #cond_axs.grid(which="major", color="lightgrey", linestyle="dotted")
                 cond_axs.yaxis.tick_right()
                 cond_axs.yaxis.set_label_position('right') 
                 

@@ -10,9 +10,10 @@ ASTE_BUILD="${ROOT_LOCATION}/../aste/build"
 MAPPING_TESTER="${ROOT_LOCATION}/../aste/tools/mapping-tester"
 
 HEAPTRACK_LOCATION="${ROOT_LOCATION}/../heaptrack/build/bin"
-PATH=$PATH:$HEAPTRACK_LOCATION
+PATH=$PATH:$HEAPTRACK_LOCATION:$ASTE_BUILD
 
-echo $HEAPTRACK_LOCATION
+echo "HEAPTRACK_LOCATION = ${HEAPTRACK_LOCATION}"
+echo "ASTE_BUILD = ${ASTE_BUILD}"
 
 rm -rf "${TEST_LOCATION}"
 mkdir -p "${TEST_LOCATION}"
@@ -24,15 +25,15 @@ echo ""
 cd "${TEST_LOCATION}"
 
 # Calculate franke function on fine mesh
-precice-aste-evaluate -m "${ROOT_LOCATION}/meshes/t_0.008.vtk" -f "franke3d" -d "Franke Function" -o "fine_mesh_nn.vtk"
+precice-aste-evaluate -m "${ROOT_LOCATION}/meshes/t_0.02.vtk" -f "franke3d" -d "Franke Function" -o "fine_mesh_nn.vtk"
 
 echo ""
 echo "[TEST] precice-aste-run"
 echo ""
 
 # Map from the finer mesh to coarser mesh
-gdb precice-aste-run -v -p A --mesh "fine_mesh_nn" --data "Franke Function" -c "${RUN_LOCATION}/precice-config.xml" &
-gdb precice-aste-run -v -p B --mesh "${ROOT_LOCATION}/meshes/t_0.006" --output "map_nn" --data "InterpolatedData" -c "${RUN_LOCATION}/precice-config.xml"
+heaptrack precice-aste-run -v -p A --mesh "fine_mesh_nn" --data "Franke Function" -c "${RUN_LOCATION}/precice-config.xml" &
+heaptrack precice-aste-run -v -p B --mesh "${ROOT_LOCATION}/meshes/t_0.01" --output "map_nn" --data "InterpolatedData" -c "${RUN_LOCATION}/precice-config.xml"
 
 echo ""
 echo "[TEST] precice-aste-evaluate"
